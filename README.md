@@ -60,3 +60,5 @@ src  源文件
 build  编译过程中临时中间文件
 thirdparty 第三方库文件
 CMakeLists.txt  利用cmake管理文件 构建编译环境
+
+第一版代码存在问题：主线程和子线程既发送数据又接收数据存在线程阻塞

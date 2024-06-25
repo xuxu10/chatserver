@@ -17,14 +17,15 @@ nginx配置基于tcp的负载均衡
 3.配置nginx.conf文件添加tcp负载均衡(这里采用的是轮询算法）
 stream{
   upstream MyServer{
-    server 127.0.0.1:6001 weight = 1 max_fails=3 fail_timeout=30s;
+    server 127.0.0.1:6001 weight = 1 max_fails=3 fail_timeout=30s; #30秒内出现3次错误，该服务器被熔断
     server 127.0.0.1:6002 weight = 1 max_fails=3 fail_timeout=30s;
     }
     server{
-      proxy_connect_timeout 1s;
-      listen 800;
+      proxy_connect_timeout 1s; # 与被代理服务器建立连接的超时时间为1s，超时则连接失败
+      listen 8000;#所有客户端请求连接8000端口，该端口此时作为反向代理器
+      #proxy_socket_keepalive on;  # 开启SO_KEEPALIVE选项进行心跳检测
       proxy_pass  MyServer;
-      tcp_nodelay on;
+      tcp_nodelay on;#关闭nagle算法，减少延迟
     }
   }
 Redis
